@@ -17,18 +17,23 @@ func initializeLogger() *logger.Logger {
 	return myLogger
 }
 
-
 func main() {
+	// Start Logger
 	logInstance := initializeLogger()
+
+	// Initialize Case Handler struct
+	casesHandler := handlers.CasesHandler{}
+
+	// API Routes
+	http.HandleFunc("/api/v1/cases", casesHandler.GetCases)
+	http.HandleFunc("/api/v1/cases/random/", casesHandler.GetRandomCases)
 
 	// Server Frontend from root endpoint
 	http.Handle("/", http.FileServer(http.Dir("public")))
 
-	// API Routes
-	http.Handle("/api/v1/cases", handlers.GetCases{})
 	addr := ":8080"
 	err := http.ListenAndServe(addr, nil)
-	
+
 	if err != nil {
 		logInstance.Error("Server Failed", err)
 	}
