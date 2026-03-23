@@ -4,63 +4,44 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"prateekkuniyal.dev/desicrimepod/models"
+	"prateekkuniyal.dev/desicrimepod/data"
+	"prateekkuniyal.dev/desicrimepod/logger"
 )
 
 type CasesHandler struct {
-	Api string
+	storage data.MovieStorage
+	logger  *logger.Logger
+}
+
+func NewCaseHandler(storage data.MovieStorage, logger *logger.Logger) *CasesHandler {
+	return &CasesHandler{
+		storage: storage,
+		logger:  logger,
+	}
 }
 
 func (c *CasesHandler) writeJSONResponse(w http.ResponseWriter, data any) {
 	w.Header().Add("Content-Type", "application/json")
 	enc := json.NewEncoder(w)
 	if err := enc.Encode(data); err != nil {
-		// error log this
+		c.logger.Error("Unable to encode response to JSON", err)
 	}
 }
 
 func (c *CasesHandler) GetCases(w http.ResponseWriter, r *http.Request) {
-	cases := []models.Case{
-		{
-			ID:       "1",
-			Name:     "2008 Noida Double Murder Case (Arushi Talwar)",
-			State:    "Uttar Pradesh",
-			Year:     2008,
-			YtVideos: nil,
-		},
-		{
-			ID:       "2",
-			Name:     "Burari Deaths",
-			State:    "Delhi",
-			Year:     2018,
-			YtVideos: nil,
-		},
-		{
-			ID:       "3",
-			Name:     "2006 Noida serial murders",
-			State:    "Uttar Pradesh",
-			Year:     2006,
-			YtVideos: nil,
-		},
-		{
-			ID:       "4",
-			Name:     "Bikini Killer Cases",
-			State:    "Uttar Pradesh",
-			Year:     1980,
-			YtVideos: nil,
-		},
+	cases, err := c.storage.GetTopCases()
+	if err != nil {
+		http.Error(w, "Unable to fetch data", http.StatusInternalServerError)
+		c.logger.Error("Unable to obtain cases from Storage", err)
 	}
-
 	c.writeJSONResponse(w, cases)
 }
 
 func (c *CasesHandler) GetRandomCases(w http.ResponseWriter, r *http.Request) {
-	randomCase := models.Case{
-		ID:       "1",
-		Name:     "2008 Noida Double Murder Case (Arushi Talwar)",
-		State:    "Uttar Pradesh",
-		Year:     2008,
-		YtVideos: nil,
+	randomCase, err := c.storage.GetTopCases()
+	if err != nil {
+		http.Error(w, "Unable to fetch data", http.StatusInternalServerError)
+		c.logger.Error("Unable to obtain cases from Storage", err)
 	}
 
 	c.writeJSONResponse(w, randomCase)
