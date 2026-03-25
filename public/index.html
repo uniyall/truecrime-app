@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desi Crime Podcast Catalogue</title>
+    <title>Desi Crime Podcast</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer type="module" src="app.js"></script>
 </head>
+
 <body>
-    <h1>Desi Crime Web App</h1>
+    <!-- <h1>Desi Crime Web App</h1> -->
+    <header>
+        <h1>
+            <a href="/" class="navlink"><img src="/images/logo.png" height="35" alt="Desi Crime Pod"></a>
+        </h1>
+        <nav>
+            <ul>
+                <li><a href="/" class="navlink">Cases</a></li>
+                <li><a href="/account/favorites" class="navlink">Favorites</a></li>
+                <li><a href="/account/watchlist" class="navlink">Investigations</a></li>
+                <li><a href="/account/" class="navlink">My Account</a></li>
+            </ul>
+        </nav>
+        <div>
+            <form onsubmit="app.search(event)">
+                <input type="search" placeholder="Search Cases">
+            </form>
+        </div>
+
+    </header>
+
+    <main>
+
+    </main>
+
+    <!-- Templates -->
+    <template id="template-test">
+        <h1>This is the Test Web Component</h1>
+    </template>
 </body>
+
 </html>
